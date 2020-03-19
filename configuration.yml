@@ -1,0 +1,23 @@
+---
+-
+  name: Configuration Challenge
+  become: yes
+  hosts: all
+  tasks:
+   - name: Template file before copying it over
+     template:
+        src: ./app-config.conf.j2
+        dest:  /etc/app-config.conf
+        mode: 0644
+        owner: root
+        group: ubuntu
+     when: ansible_distribution == "Ubuntu"
+   - name: Template file to amazon
+     template:
+        src: ./app-config.conf.j2
+        dest:  /etc/app-config.conf
+        mode: 0644
+        owner: root
+        group: ec2-user
+     when: ansible_distribution == "Amazon"    
+

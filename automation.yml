@@ -1,0 +1,52 @@
+---
+-
+  name: Automation Challenge
+  hosts: all
+  become: $USER
+  tasks:
+    - name: Copy the tar file over to the hosts home directory
+      copy: 
+        src: automation.tar
+        dest: ~/
+    - name: Untar the file to /var in both the host machines
+      unarchive: 
+        src: automation.tar
+        dest: /
+      become: yes      
+    - name: Install the apche2 package on Ubuntu host
+      apt: 
+        name: apache2
+        state: present
+      become: yes
+      when: ansible_distribution == "Ubuntu"       
+    - name: Install the httpd package on the Amazon host
+      yum: 
+        name: httpd
+        state: present
+      become: yes
+      when: ansible_distribution == "Amazon"
+    - name: Starting the httpd service for Amazon host
+      service:
+        name: httpd
+        state: started
+      when: ansible_distribution == "Amazon"
+      become: yes
+    - name: Starting the apache2 service for Ubuntu host
+      service: 
+        name: apache2
+        state: started
+      when: ansible_distribution == "Ubuntu"
+      become: yes
+
+
+
+
+
+
+
+
+
+
+
+
+
